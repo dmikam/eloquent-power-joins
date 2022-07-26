@@ -51,7 +51,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
 
         $this->assertStringContainsString(
             'and "posts"."published" = ?',
-            $query
+            $query   
         );
         return;
 
