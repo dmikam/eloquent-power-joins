@@ -9,33 +9,7 @@ use Kirschbaum\PowerJoins\Tests\Models\Post;
 use Kirschbaum\PowerJoins\Tests\Models\User;
 use Kirschbaum\PowerJoins\Tests\Models\UserProfile;
 
-class JoinRelationshipWithJoinTypesTest extends TestCase
-{
-
-
-    /** @test */
-    public function test_apply_condition_to_join_2()
-    {
-        $queryBuilder = User::query()->joinRelationship('posts', function ($join) {
-            $join->where('posts.published', true);
-        });
-
-        $query = $queryBuilder->toSql();
-
-        // running to make sure it doesn't throw any exceptions
-        $queryBuilder->get();
-
-        $this->assertStringContainsString(
-            'inner join "posts" on "posts"."user_id" = "users"."id"',
-            $query
-        );
-
-        $this->assertStringContainsString(
-            'and "posts"."published" = ?',
-            $query
-        );
-    }
-
+class JoinRelationshipWithJoinTypesTest extends TestCase {
 
     /**
      * $category_1
@@ -59,6 +33,29 @@ class JoinRelationshipWithJoinTypesTest extends TestCase
      * @test
      */
     public function test_categoreis_inner_join_published_posts() {
+
+
+        $queryBuilder = User::query()->joinRelationship('posts', function ($join) {
+            $join->where('posts.published', true);
+        });
+
+        $query = $queryBuilder->toSql();
+
+        // running to make sure it doesn't throw any exceptions
+        $queryBuilder->get();
+
+        $this->assertStringContainsString(
+            'inner join "posts" on "posts"."user_id" = "users"."id"',
+            $query
+        );
+
+        $this->assertStringContainsString(
+            'and "posts"."published" = ?',
+            $query
+        );
+return;
+
+
         $this->prepare_test_case_1();
 
         $categories = Category::query()->joinRelationship('posts', [
