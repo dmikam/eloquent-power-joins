@@ -69,7 +69,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $this->assertCount(2, $categories);
     }
 
-    public function test_categoreis_left_join_published_posts() {
+    public function test_categoreis_2222222_left_join_published_posts() {
         $this->prepare_test_case_1();
 
         $categories = Category::joinRelationship('posts', [
