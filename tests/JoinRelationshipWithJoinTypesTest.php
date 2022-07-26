@@ -53,7 +53,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
             'and "posts"."published" = ?',
             $query
         );
-return;
+        return;
 
 
         $this->prepare_test_case_1();
