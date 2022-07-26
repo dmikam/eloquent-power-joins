@@ -41,8 +41,7 @@ jobs:
 
         steps:
             -   name: Checkout code
-#                uses: actions/checkout@v1
-                uses: actions/checkout@tests
+                uses: actions/checkout@v1
 
             -   name: Install SQLite 3
                 run: |
