@@ -51,7 +51,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
 
         $this->assertStringContainsString(
             'and "posts"."published" = ?',
-            $query   
+            $query
         );
         return;
 
@@ -70,6 +70,8 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
     }
 
     public function test_categoreis_left_join_published_posts() {
+        echo "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        return;
         // $this->prepare_test_case_1();
 
         $categories = Category::joinRelationship('posts', [
