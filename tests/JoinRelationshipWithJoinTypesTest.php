@@ -79,6 +79,18 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $query = $queryBuilder->toSql();
         dump($query);
 
+        $queryBuilder = User::query()->joinRelationship('posts.comments', [
+            'posts' => function ($join) {
+                $join->where('posts.published', true);
+            },
+            'comments' => function ($join) {
+                $join->where('comments.approved', true);
+            },
+        ]);
+
+        $query = $queryBuilder->toSql();
+        dump($query);
+
         $categories = Category::query()->joinRelationship('posts', [
             'posts' => function($join){
                 $join->where('posts.published', true);
