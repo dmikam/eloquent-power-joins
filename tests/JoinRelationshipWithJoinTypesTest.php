@@ -61,10 +61,10 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $categories_with_published_posts = Category::query()->joinRelationship('posts', function($join){
             $join->left();
             $join->published();
-        });
+        })->select('posts.*');
         $this->assertCount(3, $categories_with_published_posts->get());
 
-        dump('LEFT JOUIN RESULTS', $categories_with_published_posts->get('posts.*'));
+        dump('LEFT JOUIN RESULTS', $categories_with_published_posts->get('posts'));
 
         $categories_with_UNpublished_posts = Category::query()->joinRelationship('posts', function($join){
             $join->left();
