@@ -41,7 +41,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         });
         // should only get categories with assigned posts.
         dump($categories->toSql(), $categories->get()->toArray());
-        $this->assertCount(2, $categories);
+        $this->assertCount(2, $categories->get()->toArray());
     }
 
     public function test_categoreis_left_join_published_posts() {
