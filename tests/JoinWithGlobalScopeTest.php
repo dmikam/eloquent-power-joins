@@ -11,7 +11,7 @@ use Kirschbaum\PowerJoins\Tests\Models\Category;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kirschbaum\PowerJoins\Tests\Models\UserProfile;
 use Kirschbaum\PowerJoins\Tests\Models\PostWithGlobalScope;
-
+// aaaaaaaaaaaaaaaa
 class JoinWithGlobalScopeTest extends TestCase
 {
     /** @test */
