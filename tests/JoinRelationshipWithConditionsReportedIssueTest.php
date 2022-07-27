@@ -33,8 +33,8 @@ class JoinRelationshipWithConditionsReportedIssueTest extends TestCase {
     }
 
     public function test_conditions_inside_simple_join_array_callback() {
-        // $this->markTestSkipped('[SKIPPED] Reported inconsistent conditioning of joins: https://github.com/kirschbaum-development/eloquent-power-joins/issues/105');
-        // return;
+        $this->markTestSkipped('[SKIPPED] Reported inconsistent conditioning of joins: https://github.com/kirschbaum-development/eloquent-power-joins/issues/105');
+        return;
 
         $queryBuilder = User::query()->joinRelationship('posts', [
             'posts' => function ($join) {
