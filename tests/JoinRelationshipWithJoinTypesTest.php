@@ -30,6 +30,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
 
         $post_no_category_1 = factory(Post::class)->create(['category_id' => 0, 'published' => true]);
         $post_no_category_2 = factory(Post::class)->create(['category_id' => 0, 'published' => false]);
+        $post_no_category_3 = factory(Post::class)->create(['category_id' => 0, 'published' => false]);
     }
 
     /**
@@ -55,24 +56,45 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
     /**
      * @test
      */
-    public function test_categories_left_join_published_posts() {
+    public function test_categories_left_join_posts_num() {
         $this->prepare_test_case_1();
 
-        $categories_with_published_posts = Category::query()->joinRelationship('posts', function($join){
+        $categories_with_posts_num = Category::query()->joinRelationship('posts', function($join){
+            $join->as('post');
             $join->left();
             $join->published();
-        })->select('posts.*');
-        $this->assertCount(3, $categories_with_published_posts->get());
+        })
+            ->groupby('categories.id')
+            ->select('categories.*, SUM(IF(post.id IS NULL, 0, 1)) as posts_num')
+            ->orderby('categories.id');
 
-        dump('LEFT JOUIN RESULTS', $categories_with_published_posts->get('posts'));
+        $rows = $categories_with_posts_num->get()->toArray();
+        $this->assertCount(2, $rows);
+        $this->assertEquals($categories_with_posts_num[0]->posts_num, 2);
+        $this->assertEquals($categories_with_posts_num[1]->posts_num, 0);
+    }
 
-        $categories_with_UNpublished_posts = Category::query()->joinRelationship('posts', function($join){
-            $join->left();
-            $join->where('published', false);
+    /**
+     * @test
+     */
+    public function test_categories_right_join_posts_inexistent_category() {
+        $this->prepare_test_case_1();
+
+        // just to test right joins, we'll obtain posts through Category model
+        $posts_inexistent_category = Category::query()->joinRelationship('posts', function($join){
+            $join->as('post');
+            $join->right();
+            // $join->published();
         });
 
-        // dump($categories_with_published_posts->toSql(), $categories_with_published_posts->get()->toArray());
-        $this->assertCount(3, $categories_with_UNpublished_posts->get());
+        $rows = $posts_inexistent_category->get()->toArray();
+
+        $this->assertCount(3, $rows);
+        // now only published
+        $this->assertCount(1, (clone $posts_inexistent_category)->where('post.published', true)->get()->toArray());
+        // now only unpublished
+        $this->assertCount(2, (clone $posts_inexistent_category)->where('post.published', false)->get()->toArray());
+
     }
 
     public function test_conditions_inside_joins() {
