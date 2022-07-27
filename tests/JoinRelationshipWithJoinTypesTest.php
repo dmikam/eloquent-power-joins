@@ -96,7 +96,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $queryBuilder = User::query()->joinRelationship('posts.comments', [
             'posts' => function ($join) {
                 $join->where('posts.published', true);
-                $join->left();
+                // $join->left();
             },
             // 'comments' => function ($join) {
             //     $join->where('comments.approved', true);
@@ -110,7 +110,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $queryBuilder = User::query()->joinRelationship('posts', [
             'posts' => function ($join) {
                 $join->where('posts.published', true);
-                $join->left();
+                // $join->left();
             },
             // 'comments' => function ($join) {
             //     $join->where('comments.approved', true);
