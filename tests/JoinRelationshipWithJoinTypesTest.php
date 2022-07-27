@@ -79,7 +79,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $query = $queryBuilder->toSql();
         dump($query);
 
-        $categories = Category::joinRelationship('posts', [
+        $categories = Category::query()->joinRelationship('posts', [
             'posts' => function($join){
                 $join->where('posts.published', true);
                 $join->left();
