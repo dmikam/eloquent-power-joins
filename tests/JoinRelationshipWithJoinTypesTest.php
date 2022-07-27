@@ -40,11 +40,11 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
             $join->published();
         });
         // should only get categories with assigned posts.
-        dump($categories->toSql(), $categories->get()->toArray());
+        // dump($categories->toSql(), $categories->get()->toArray());
         $this->assertCount(2, $categories->get()->toArray());
     }
 
-    public function test_categoreis_left_join_published_posts() {
+/*    public function test_categoreis_left_join_published_posts() {
         $this->prepare_test_case_1();
 
         $queryBuilder = User::query()->joinRelationship('posts', function ($join) {
@@ -104,7 +104,9 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
             }
         ]);
 
-        dump("RUN 3", $categories->toSql()/*, $categories->get()->toArray()*/);
+        dump("RUN 3", $categories->toSql()
+            // , $categories->get()->toArray()
+        );
 
         $categories = User::query()->joinRelationship('posts', [
             'posts' => function($join){
@@ -113,11 +115,13 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
             }
         ]);
 
-        dump("RUN 4", $categories->toSql()/*, $categories->get()->toArray()*/);
+        dump("RUN 4", $categories->toSql()
+            // , $categories->get()->toArray()
+        );
 
         $this->markTestSkipped('[SKIPPED] Just trying conditioned joins without nesting');
         // $this->assertCount(3, $categories);
-    }
+    }*/
 
 
 

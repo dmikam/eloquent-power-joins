@@ -646,7 +646,7 @@ class JoinRelationshipTest extends TestCase
     }
 
     /** @test */
-    public function test_join_same_nested_relationship_using_named_alias()
+/*    public function test_join_same_nested_relationship_using_named_alias()
     {
         $this->markTestSkipped('Still to implement this using the array syntax');
 
@@ -664,7 +664,7 @@ class JoinRelationshipTest extends TestCase
 
         $this->assertStringContainsString('inner join "categories" as "category_alias_1" on "posts"."category_id" = "category_alias_1"."id"', $query);
         $this->assertStringContainsString('inner join "categories" as "category_alias_2" on "posts"."category_id" = "category_alias_2"."id"', $query);
-    }
+    }*/
 
     public function test_union_query()
     {
