@@ -33,43 +33,18 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
      * @test
      */
     public function test_categoreis_inner_join_published_posts() {
-
-
-        $queryBuilder = User::query()->joinRelationship('posts', function ($join) {
-            $join->where('posts.published', true);
-        });
-
-        $query = $queryBuilder->toSql();
-
-        // running to make sure it doesn't throw any exceptions
-        $queryBuilder->get();
-
-        $this->assertStringContainsString(
-            'inner join "posts" on "posts"."user_id" = "users"."id"',
-            $query
-        );
-
-        $this->assertStringContainsString(
-            'and "posts"."published" = ?',
-            $query
-        );
-        return;
-
-
         $this->prepare_test_case_1();
 
-        $categories = Category::query()->joinRelationship('posts', [
-            'posts' => function($join){
-                $join->as('post');
-                $join->published();
-            }
-        ]);
+        $categories = Category::query()->joinRelationship('posts', function($join){
+            $join->as('post');
+            $join->published();
+        });
         // should only get categories with assigned posts.
         dump($categories->toSql(), $categories->get()->toArray());
         $this->assertCount(2, $categories);
     }
 
-    public function test_categoreis_2222222_left_join_published_posts() {
+    public function test_categoreis_left_join_published_posts() {
         $this->prepare_test_case_1();
 
         $queryBuilder = User::query()->joinRelationship('posts', function ($join) {
@@ -139,7 +114,9 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         ]);
 
         dump("RUN 4", $categories->toSql()/*, $categories->get()->toArray()*/);
-        $this->assertCount(3, $categories);
+
+        $this->markTestSkipped('[SKIPPED] Just trying conditioned joins without nesting');
+        // $this->assertCount(3, $categories);
     }
 
 
