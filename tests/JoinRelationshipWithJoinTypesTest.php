@@ -27,25 +27,57 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $post_1_2 = factory(Post::class)->create(['category_id' => $category_1->id]);
 
         $post_2_1 = factory(Post::class)->create(['category_id' => $category_2->id, 'published' => false]);
+
+        $post_no_category_1 = factory(Post::class)->create(['category_id' => 0, 'published' => true]);
+        $post_no_category_2 = factory(Post::class)->create(['category_id' => 0, 'published' => false]);
     }
 
     /**
      * @test
      */
-    public function test_categoreis_inner_join_published_posts() {
+    public function test_categories_inner_join_published_posts() {
         $this->prepare_test_case_1();
 
-        $categories = Category::query()->joinRelationship('posts', function($join){
+        $categories_with_published_posts = Category::query()->joinRelationship('posts', function($join){
             $join->as('post');
             $join->published();
         });
-        // should only get categories with assigned posts.
-        // dump($categories->toSql(), $categories->get()->toArray());
-        $this->assertCount(2, $categories->get()->toArray());
+
+        $categories_with_UNpublished_posts = Category::query()->joinRelationship('posts', function($join){
+            $join->where('published', false);
+        });
+
+        // dump($categories_with_published_posts->toSql(), $categories_with_published_posts->get()->toArray());
+        $this->assertCount(2, $categories_with_published_posts->get());
+        $this->assertCount(1, $categories_with_UNpublished_posts->get());
     }
 
-/*    public function test_categoreis_left_join_published_posts() {
+    /**
+     * @test
+     */
+    public function test_categories_left_join_published_posts() {
         $this->prepare_test_case_1();
+
+        $categories_with_published_posts = Category::query()->joinRelationship('posts', function($join){
+            $join->left();
+            $join->published();
+        });
+        $this->assertCount(3, $categories_with_published_posts->get());
+
+        dump('LEFT JOUIN RESULTS', $categories_with_published_posts->get('posts.*'));
+
+        $categories_with_UNpublished_posts = Category::query()->joinRelationship('posts', function($join){
+            $join->left();
+            $join->where('published', false);
+        });
+
+        // dump($categories_with_published_posts->toSql(), $categories_with_published_posts->get()->toArray());
+        $this->assertCount(3, $categories_with_UNpublished_posts->get());
+    }
+
+    public function test_conditions_inside_joins() {
+        $this->markTestSkipped('[SKIPPED] Reported inconsistent conditioning of joins: https://github.com/kirschbaum-development/eloquent-power-joins/issues/105');
+        return;
 
         $queryBuilder = User::query()->joinRelationship('posts', function ($join) {
             $join->where('posts.published', true);
@@ -96,32 +128,8 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $query = $queryBuilder->toSql();
         dump("RUN 2.3", $query);
 
-
-        $categories = Category::query()->joinRelationship('posts', [
-            'posts' => function($join){
-                $join->where('posts.published', true);
-                // $join->left();
-            }
-        ]);
-
-        dump("RUN 3", $categories->toSql()
-            // , $categories->get()->toArray()
-        );
-
-        $categories = User::query()->joinRelationship('posts', [
-            'posts' => function($join){
-                $join->where('posts.published', true);
-                $join->left();
-            }
-        ]);
-
-        dump("RUN 4", $categories->toSql()
-            // , $categories->get()->toArray()
-        );
-
         $this->markTestSkipped('[SKIPPED] Just trying conditioned joins without nesting');
-        // $this->assertCount(3, $categories);
-    }*/
+    }
 
 
 
