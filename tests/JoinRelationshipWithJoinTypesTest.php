@@ -65,7 +65,8 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
             $join->published();
         })
             ->groupby('categories.id')
-            ->select(['categories.*', 'SUM(IF(post.id IS NULL, 0, 1)) as posts_num'])
+            ->select(['categories.*'])
+            ->selectRaw(['SUM(IF(post.id IS NULL, 0, 1)) as posts_num'])
             ->orderby('categories.id');
 
         $rows = $categories_with_posts_num->get()->toArray();
@@ -78,6 +79,9 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
      * @test
      */
     public function test_categories_right_join_posts_inexistent_category() {
+        $this->markTestSkipped('[SKIPPED] Right joins are not supported by SQLite, so unable to test in this environment');
+        return;
+
         $this->prepare_test_case_1();
 
         // just to test right joins, we'll obtain posts through Category model
@@ -96,63 +100,5 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         $this->assertCount(2, (clone $posts_inexistent_category)->where('post.published', false)->get()->toArray());
 
     }
-
-    public function test_conditions_inside_joins() {
-        $this->markTestSkipped('[SKIPPED] Reported inconsistent conditioning of joins: https://github.com/kirschbaum-development/eloquent-power-joins/issues/105');
-        return;
-
-        $queryBuilder = User::query()->joinRelationship('posts', function ($join) {
-            $join->where('posts.published', true);
-        });
-
-        $query = $queryBuilder->toSql();
-
-        dump("RUN 1", $query);
-
-        $queryBuilder = User::query()->joinRelationship('posts.comments', [
-            'posts' => function ($join) {
-                $join->where('posts.published', true);
-            },
-            'comments' => function ($join) {
-                $join->where('comments.approved', true);
-                $join->left();
-            },
-        ]);
-
-        $query = $queryBuilder->toSql();
-        dump("RUN 2.1", $query);
-
-        $queryBuilder = User::query()->joinRelationship('posts.comments', [
-            'posts' => function ($join) {
-                $join->where('posts.published', true);
-                // $join->left();
-            },
-            // 'comments' => function ($join) {
-            //     $join->where('comments.approved', true);
-            //     $join->left();
-            // },
-        ]);
-
-        $query = $queryBuilder->toSql();
-        dump("RUN 2.2", $query);
-
-        $queryBuilder = User::query()->joinRelationship('posts', [
-            'posts' => function ($join) {
-                $join->where('posts.published', true);
-                // $join->left();
-            },
-            // 'comments' => function ($join) {
-            //     $join->where('comments.approved', true);
-            //     $join->left();
-            // },
-        ]);
-
-        $query = $queryBuilder->toSql();
-        dump("RUN 2.3", $query);
-
-        $this->markTestSkipped('[SKIPPED] Just trying conditioned joins without nesting');
-    }
-
-
 
 }
