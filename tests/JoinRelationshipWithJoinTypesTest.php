@@ -77,7 +77,8 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         });
 
         $query = $queryBuilder->toSql();
-        dump($query);
+
+        dump("RUN 1", $query);
 
         $queryBuilder = User::query()->joinRelationship('posts.comments', [
             'posts' => function ($join) {
@@ -85,11 +86,21 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
             },
             'comments' => function ($join) {
                 $join->where('comments.approved', true);
+                $join->left();
             },
         ]);
 
         $query = $queryBuilder->toSql();
-        dump($query);
+        dump("RUN 2", $query);
+
+        $categories = Category::query()->joinRelationship('posts', [
+            'posts' => function($join){
+                $join->where('posts.published', true);
+                // $join->left();
+            }
+        ]);
+
+        dump("RUN 3", $categories->toSql()/*, $categories->get()->toArray()*/);
 
         $categories = Category::query()->joinRelationship('posts', [
             'posts' => function($join){
@@ -98,7 +109,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
             }
         ]);
 
-        dump($categories->toSql(), $categories->get()->toArray());
+        dump("RUN 4", $categories->toSql()/*, $categories->get()->toArray()*/);
         $this->assertCount(3, $categories);
     }
 
