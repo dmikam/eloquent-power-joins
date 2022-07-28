@@ -71,7 +71,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
 
         // $rows = $categories_with_posts_num->get()->toArray();
         // $rows = $categories_with_posts_num->get(); //TODO: Array to string conversion
-        dump($categories_with_posts_num);
+        dump($categories_with_posts_num->get());
         // $this->assertCount(2, $rows);
         // $this->assertEquals($rows[0]->posts_num, 2);
         // $this->assertEquals($rows[1]->posts_num, 0);
