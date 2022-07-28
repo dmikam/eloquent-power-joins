@@ -66,7 +66,7 @@ class JoinRelationshipWithJoinTypesTest extends TestCase {
         })
             ->groupby('categories.id')
             ->select(['categories.*'])
-            ->selectRaw('SUM(IF(post.id IS NULL, 0, 1)) as posts_num')
+            ->selectRaw('SUM(CASE WHEN post.id IS NULL THEN 0 ELSE 1 END) as posts_num')
             ->orderby('categories.id');
 
         $rows = $categories_with_posts_num->get()->toArray();
