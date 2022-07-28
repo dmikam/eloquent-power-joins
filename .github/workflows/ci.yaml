@@ -72,4 +72,5 @@ jobs:
                     composer dump
 
             -   name: Execute tests
-                run: vendor/bin/phpunit
+#                run: vendor/bin/phpunit
+                run: php artisan test
